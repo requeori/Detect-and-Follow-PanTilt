@@ -6,22 +6,18 @@ import json
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
-
 import cv2
-
 from objecttracker.types import Frame
-
 
 class ClipError(RuntimeError):
     """El clip o su JSON no se pueden leer o son incoherentes."""
-
 
 @dataclass(frozen=True)
 class ClipMeta:
     clip_id: str
     scenario: str
     split: str
-    ball_present: str  # "always" | "never" | otro valor del JSON (sin juicio de verdad)
+    ball_present: str  # "always" o "never" 
     fps: float
     expected_frames: int
     video_path: Path
@@ -48,11 +44,7 @@ class ClipMeta:
 
 
 class VideoFileSource:
-    """Itera los fotogramas de un clip como `Frame`.
-
-    timestamp_ns se reconstruye como index / fps_measured (el vídeo no guarda los tiempos reales).
-    No sirve para medir latencia de captura; solo para el orden temporal.
-    """
+    """Itera los fotogramas de un clip como `Frame`"""
 
     def __init__(self, meta: ClipMeta) -> None:
         self._meta = meta
@@ -79,7 +71,7 @@ class VideoFileSource:
 
 
 def find_clips(root: str | Path) -> list[ClipMeta]:
-    """Todos los clips (JSON con 'recording') bajo root, ordenados por nombre."""
+    """Todos los clips bajo root, ordenados por nombre."""
     clips = []
     for json_path in sorted(Path(root).rglob("*.json")):
         try:

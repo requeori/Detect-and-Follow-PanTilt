@@ -1,24 +1,15 @@
-"""Contrato entre detectores y evaluador (D: Detection sin radio, B1-04).
-
-Un detector recibe una imagen BGR y devuelve una `Detection`. Cualquier clase con un método
-`detect(image) -> Detection` cumple el protocolo; no hace falta heredar de nada.
-"""
+"""Contrato entre detectores y evaluador"""
 
 from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
-
 import numpy as np
 
 
 @dataclass(frozen=True)
 class Detection:
     """Resultado de detectar la pelota en un fotograma.
-
-    center y bbox están en píxeles de la imagen recibida. Si found es False, el resto
-    carece de significado y debe ser None / 0.
-    """
+        Center y bbox están en píxeles de la imagen recibida."""
 
     found: bool
     center: tuple[float, float] | None = None

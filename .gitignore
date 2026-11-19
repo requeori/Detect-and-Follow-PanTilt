@@ -183,7 +183,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-data/*
 experiments/*
 docs/*
 Python_Code_old/*
