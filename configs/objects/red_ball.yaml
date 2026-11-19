@@ -1,7 +1,7 @@
 # Parametros del detector de color de la pelota roja.
 # Valores iniciales medidos en 4 fotogramas de la sesion A.
 hue_ranges:
-  - [0, 7]
+  - [0, 3]
   - [173, 180]
 s_min: 130          # madera/caja/tela naranja miden S 95-170; la pelota, mediana ~190
 v_min: 40           # la pelota en poca luz llega a V ~41 (p1)
