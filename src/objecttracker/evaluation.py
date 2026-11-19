@@ -1,11 +1,12 @@
-"""Métricas de un detector sobre clips grabados.
+"""Métricas de un detector sobre clips grabados (B1-04).
 
-Sin anotaciones de posición solo medimos cuatro cosas:
-- detection_rate: fracción de fotogramas con found, en clips donde la pelota está siempre visible.
-- false_positive_rate
-- timing: coste de detect() por fotograma
-- jitter: dispersión del centro detectado, solo si la pelota está quieta.
-No miden error de localización ni si el detector elige la pelota entre distractores (aun).
+Sin anotaciones de posición solo se pueden medir cuatro cosas, y solo donde tienen sentido:
+- detection_rate: fracción de fotogramas con found, en clips donde la pelota está siempre presente
+  (si el JSON anota annotations.ball_visible, solo cuentan esos fotogramas).
+- false_positive_rate: fracción de fotogramas con found, en clips sin pelota.
+- timing: coste de detect() por fotograma (excluye la decodificación del vídeo).
+- jitter: dispersión del centro detectado, solo si la pelota está quieta (lo decide el llamante).
+No miden error de localización ni si el detector elige la pelota entre distractores (D-012).
 """
 
 from __future__ import annotations
@@ -27,12 +28,15 @@ WARMUP_FRAMES = 5  # primeras llamadas excluidas del tiempo (cachés, asignacion
 class ClipResult:
     clip_id: str
     scenario: str
+    condition: str  # clip_id sin sesion ni fecha: "S0_estatica_1m"; une repeticiones de la toma
     split: str
     ball_present: str
     n_frames: int
     expected_frames: int
     n_found: int
-    found_rate: float
+    found_rate: float  # sobre todos los fotogramas del clip
+    rate_frames: int  # fotogramas que cuentan para detection/false_positive_rate
+    rate_found: int  # de ellos, con found
     # Solo una de las dos tiene valor, según ball_present; None = no aplicable.
     detection_rate: float | None
     false_positive_rate: float | None
@@ -52,10 +56,19 @@ class ClipResult:
         return data
 
 
+def condition_of(clip_id: str, split: str) -> str:
+    """Quita el sufijo `_<split>_<fecha>` que añade record_clip.py; si no lo hay, el id entero.
+
+    Evita mezclar en una misma tasa clips distintos del mismo escenario (S0 estática y S0
+    acercamiento no deben promediarse).
+    """
+    return clip_id.rsplit(f"_{split}_", 1)[0]
+
+
 def _jitter(centers: list[tuple[float, float]]) -> float | None:
     if len(centers) < 2:
         return None
-    xs, ys = zip(*centers)
+    xs, ys = zip(*centers, strict=True)
     return float(np.sqrt(np.var(xs) + np.var(ys)))
 
 
@@ -76,6 +89,11 @@ def evaluate_clip(
     n = len(detections)
     found = [d for d in detections if d.found]
     found_rate = len(found) / n if n else 0.0
+    # Con la pelota siempre presente solo cuentan los fotogramas anotados como visibles.
+    counted = [d for i, d in enumerate(detections) if meta.is_visible(i)]
+    rate_frames = len(counted)
+    rate_found = sum(d.found for d in counted)
+    rate = rate_found / rate_frames if rate_frames else None
     times_ms = [t / 1e6 for t in times_ns] or [0.0]
     mean_ms = statistics.fmean(times_ms)
     centers = [d.center for d in found]
@@ -84,13 +102,16 @@ def evaluate_clip(
     return ClipResult(
         clip_id=meta.clip_id,
         scenario=meta.scenario,
+        condition=condition_of(meta.clip_id, meta.split),
         split=meta.split,
         ball_present=meta.ball_present,
         n_frames=n,
         expected_frames=meta.expected_frames,
         n_found=len(found),
         found_rate=found_rate,
-        detection_rate=found_rate if meta.ball_present == "always" else None,
+        rate_frames=rate_frames,
+        rate_found=rate_found,
+        detection_rate=rate if meta.ball_present == "always" else None,
         false_positive_rate=found_rate if meta.ball_present == "never" else None,
         time_ms_mean=mean_ms,
         time_ms_p95=float(np.percentile(times_ms, 95)),
@@ -104,19 +125,24 @@ def evaluate_clip(
 
 
 def aggregate(results: list[ClipResult]) -> list[dict]:
-    """Agrega por (scenario, split). Las tasas son medias ponderadas por fotogramas, no por clip."""
+    """Agrega por (condición, sesión). Las tasas son medias ponderadas por fotogramas.
+
+    Una condición es una toma repetible (p. ej. S0_estatica_1m): sus repeticiones se juntan,
+    pero tomas distintas del mismo escenario no.
+    """
     groups: dict[tuple[str, str], list[ClipResult]] = defaultdict(list)
     for r in results:
-        groups[(r.scenario, r.split)].append(r)
+        groups[(r.condition, r.split)].append(r)
 
     rows = []
-    for (scenario, split), items in sorted(groups.items()):
+    for (condition, split), items in sorted(groups.items()):
         pos = [r for r in items if r.detection_rate is not None]
         neg = [r for r in items if r.false_positive_rate is not None]
         frames_all = sum(r.n_frames for r in items)
         rows.append(
             {
-                "scenario": scenario,
+                "scenario": items[0].scenario,
+                "condition": condition,
                 "split": split,
                 "clips": len(items),
                 "frames": frames_all,
@@ -134,5 +160,5 @@ def aggregate(results: list[ClipResult]) -> list[dict]:
 
 
 def _weighted(items: list[ClipResult]) -> float | None:
-    frames = sum(r.n_frames for r in items)
-    return sum(r.n_found for r in items) / frames if frames else None
+    frames = sum(r.rate_frames for r in items)
+    return sum(r.rate_found for r in items) / frames if frames else None

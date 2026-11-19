@@ -21,11 +21,19 @@ class ClipMeta:
     clip_id: str
     scenario: str
     split: str
-    ball_present: str  # "always" o "never"
+    ball_present: str  # "always" | "never" | otro valor del JSON (sin juicio de verdad)
     fps: float
     expected_frames: int
     video_path: Path
     json_path: Path
+    # Rangos [inicio, fin] (inclusivos) de fotogramas con la pelota visible, del JSON
+    # "annotations.ball_visible". None = no anotado: se cuentan todos los fotogramas.
+    ball_visible: tuple[tuple[int, int], ...] | None = None
+
+    def is_visible(self, index: int) -> bool:
+        if self.ball_visible is None:
+            return True
+        return any(lo <= index <= hi for lo, hi in self.ball_visible)
 
     @classmethod
     def from_json(cls, json_path: str | Path) -> ClipMeta:
@@ -33,6 +41,8 @@ class ClipMeta:
         try:
             data = json.loads(json_path.read_text(encoding="utf-8"))
             recording = data["recording"]
+            ball_present = data["ball"]["present"]
+            ball_visible = _parse_ball_visible(data.get("annotations"), ball_present)
             return cls(
                 clip_id=data["clip_id"],
                 scenario=data["scenario"],
@@ -42,13 +52,32 @@ class ClipMeta:
                 expected_frames=int(recording["frames"]),
                 video_path=json_path.with_name(recording["file"]),
                 json_path=json_path,
+                ball_visible=ball_visible,
             )
         except (OSError, KeyError, ValueError, TypeError) as exc:
             raise ClipError(f"JSON de clip inválido {json_path}: {exc!r}") from exc
 
 
+def _parse_ball_visible(
+    annotations: dict | None, ball_present: str
+) -> tuple[tuple[int, int], ...] | None:
+    """Lee annotations.ball_visible = [[inicio, fin], ...]; falla si no es coherente."""
+    if not annotations or "ball_visible" not in annotations:
+        return None
+    if ball_present != "always":
+        raise ValueError('ball_visible solo tiene sentido con ball.present == "always"')
+    ranges = tuple((int(lo), int(hi)) for lo, hi in annotations["ball_visible"])
+    if not ranges or any(lo < 0 or hi < lo for lo, hi in ranges):
+        raise ValueError(f"rangos de ball_visible invalidos: {ranges}")
+    return ranges
+
+
 class VideoFileSource:
-    """Itera los fotogramas de un clip como `Frame`"""
+    """Itera los fotogramas de un clip como `Frame`.
+
+    timestamp_ns se reconstruye como index / fps_measured (el vídeo no guarda los tiempos reales).
+    No sirve para medir latencia de captura; solo para el orden temporal.
+    """
 
     def __init__(self, meta: ClipMeta) -> None:
         self._meta = meta
@@ -75,7 +104,7 @@ class VideoFileSource:
 
 
 def find_clips(root: str | Path) -> list[ClipMeta]:
-    """Todos los clips bajo root, ordenados por nombre."""
+    """Todos los clips (JSON con 'recording') bajo root, ordenados por nombre."""
     clips = []
     for json_path in sorted(Path(root).rglob("*.json")):
         try:
