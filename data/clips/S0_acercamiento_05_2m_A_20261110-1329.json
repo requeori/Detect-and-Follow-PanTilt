@@ -3,6 +3,7 @@
   "scenario": "S0",
   "split": "A",
   "date": "2026-11-10T13:29:25",
+  "annotations": { "ball_visible": [[12, 556]] },
   "camera": {
     "profile": "aukey_pc_lm1e",
     "mode": "hd720_msmf",
