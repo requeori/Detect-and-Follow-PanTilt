@@ -1,0 +1,29 @@
+{
+  "clip_id": "S3_estatica_2_5m_V_20261111-1643",
+  "scenario": "S3",
+  "split": "V",
+  "date": "2026-11-11T16:43:14",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 30.04
+  },
+  "ball": {
+    "present": "always",
+    "distance_m": 2.5
+  },
+  "recording": {
+    "file": "S3_estatica_2_5m_V_20261111-1643.avi",
+    "codec": "MJPG",
+    "frames": 300,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "mismas condiciones otro día que split A- con dia lluvioso"
+}

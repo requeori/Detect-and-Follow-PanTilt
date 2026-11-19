@@ -1,0 +1,29 @@
+{
+  "clip_id": "S1_poca_luz_A_20261110-1346",
+  "scenario": "S1",
+  "split": "A",
+  "date": "2026-11-10T13:46:22",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 24.54
+  },
+  "ball": {
+    "present": "always",
+    "distance_m": 1.0
+  },
+  "recording": {
+    "file": "S1_poca_luz_A_20261110-1346.avi",
+    "codec": "MJPG",
+    "frames": 246,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "Poca luz provemiente del salón en la parte frontal, fondo cama con distractores de diferentes formas, ninguno rojo,  estatico 1m"
+}

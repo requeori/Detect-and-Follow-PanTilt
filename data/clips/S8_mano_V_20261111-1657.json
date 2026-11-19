@@ -1,0 +1,29 @@
+{
+  "clip_id": "S8_mano_V_20261111-1657",
+  "scenario": "S8",
+  "split": "V",
+  "date": "2026-11-11T16:57:31",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 30.05
+  },
+  "ball": {
+    "present": "never",
+    "distance_m": null
+  },
+  "recording": {
+    "file": "S8_mano_V_20261111-1657.avi",
+    "codec": "MJPG",
+    "frames": 300,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "mismas condiciones otro día que split A- con dia lluvioso"
+}

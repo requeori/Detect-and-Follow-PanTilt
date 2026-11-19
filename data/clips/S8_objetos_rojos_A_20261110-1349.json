@@ -1,0 +1,29 @@
+{
+  "clip_id": "S8_objetos_rojos_A_20261110-1349",
+  "scenario": "S8",
+  "split": "A",
+  "date": "2026-11-10T13:49:42",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 27.04
+  },
+  "ball": {
+    "present": "never",
+    "distance_m": null
+  },
+  "recording": {
+    "file": "S8_objetos_rojos_A_20261110-1349.avi",
+    "codec": "MJPG",
+    "frames": 271,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "lus de foco y ventana ateral,, fondo cama con distractores de diferentes formas, ninguna pelota rojo"
+}

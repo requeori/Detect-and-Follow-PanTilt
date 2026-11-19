@@ -1,0 +1,29 @@
+{
+  "clip_id": "S0_acercamiento_05_2m_A_20261110-1329",
+  "scenario": "S0",
+  "split": "A",
+  "date": "2026-11-10T13:29:25",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 28.03
+  },
+  "ball": {
+    "present": "always",
+    "distance_m": null
+  },
+  "recording": {
+    "file": "S0_acercamiento_05_2m_A_20261110-1329.avi",
+    "codec": "MJPG",
+    "frames": 557,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "ventana lateral abierta, lus de cuarto encendida, nublado, fondo cama con distractores de diferentes formas, ninguno rojo, acercamiento lento de 2m a 0.5"
+}

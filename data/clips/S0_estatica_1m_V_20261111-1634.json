@@ -1,0 +1,29 @@
+{
+  "clip_id": "S0_estatica_1m_V_20261111-1634",
+  "scenario": "S0",
+  "split": "V",
+  "date": "2026-11-11T16:34:28",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 30.04
+  },
+  "ball": {
+    "present": "always",
+    "distance_m": 1.0
+  },
+  "recording": {
+    "file": "S0_estatica_1m_V_20261111-1634.avi",
+    "codec": "MJPG",
+    "frames": 300,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "mismas condiciones otro día que split A"
+}

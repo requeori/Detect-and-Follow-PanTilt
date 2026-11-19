@@ -1,0 +1,29 @@
+{
+  "clip_id": "S1_bombilla_calida_A_20261110-1342",
+  "scenario": "S1",
+  "split": "A",
+  "date": "2026-11-10T13:42:16",
+  "camera": {
+    "profile": "aukey_pc_lm1e",
+    "mode": "hd720_msmf",
+    "backend": "msmf",
+    "width": 1280,
+    "height": 720,
+    "fps_measured": 26.27
+  },
+  "ball": {
+    "present": "always",
+    "distance_m": 1.0
+  },
+  "recording": {
+    "file": "S1_bombilla_calida_A_20261110-1342.avi",
+    "codec": "MJPG",
+    "frames": 263,
+    "failed_reads": 0
+  },
+  "software": {
+    "objecttracker": "0.0.1",
+    "opencv": "5.0.0"
+  },
+  "notes": "solo lus de cuarto encendido, fondo cama con distractores de diferentes formas, ninguno rojo,  estatico 1m"
+}
