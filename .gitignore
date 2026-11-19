@@ -199,3 +199,8 @@ data/**/*.png
 # se versionan los JSON y los resultados
 !data/**/*.json
 tests/*
+fallos/*
+output/*.avi
+configs/experiments/*
+output/*_f0*
+output/*e2*

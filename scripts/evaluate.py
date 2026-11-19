@@ -2,7 +2,7 @@
 
 Uso:
     python scripts/evaluate.py CLIPS_DIR --detector paquete.modulo:fabrica [--out resultados.json]
-        --split A|V [--config params.yaml] [--static S0 S3] [--only S0 S8]
+        --split A|V [--config params.yaml] [--static S0_estatica S3] [--only S0 S8]
 """
 
 from __future__ import annotations
@@ -46,9 +46,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--static",
         nargs="*",
-        default=["S0"],
-        help="prefijos de clip_id con la pelota quieta, para medir jitter (def. S0). "
-        "Ej.: S0_estatica S3. 'S0' incluiría también el clip de acercamiento",
+        default=[],
+        help="prefijos de clip_id con la pelota quieta, para medir jitter. Sin esta opcion no se "
+        "mide jitter. Ej.: --static S0_estatica S3",
     )
     parser.add_argument("--only", nargs="*", help="evaluar solo estos escenarios")
     parser.add_argument(
@@ -86,10 +86,10 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     rows = aggregate(results)
-    print("\nPor escenario y sesión (tasas ponderadas por fotogramas)")
+    print("\nPor condición y sesión (tasas ponderadas por fotogramas)")
     for row in rows:
         print(
-            f"{row['scenario']:4s} {row['split']:2s} clips={row['clips']:2d} "
+            f"{row['condition']:30s} {row['split']:2s} clips={row['clips']:2d} "
             f"det%={pct(row['detection_rate'])} FP%={pct(row['false_positive_rate'])}"
         )
 
