@@ -1,0 +1,24 @@
+name: aukey_pc_lm1e
+device_index: 0
+
+flip_vertical: false
+flip_horizontal: false
+
+default_mode: hd720_msmf
+
+modes:
+  # Modo principal del dataset: 30 fps, color probablemente MJPEG.
+  hd720_msmf:
+    backend: msmf
+    width: 1280
+    height: 720
+    fps: 30
+    focal_px: 666.5   # regla de 1 m a 2 m, 5 medidas
+
+  # Comparación de color: sin comprimir, recorta los lados (4:3).
+  vga_dshow:
+    backend: dshow
+    width: 640
+    height: 480
+    fps: 30
+    focal_px: 443.8

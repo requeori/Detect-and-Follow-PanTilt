@@ -1,0 +1,14 @@
+# Parametros del detector de color de la pelota roja.
+# Valores iniciales medidos en 4 fotogramas de la sesion A.
+hue_ranges:
+  - [0, 7]
+  - [173, 180]
+s_min: 130          # madera/caja/tela naranja miden S 95-170; la pelota, mediana ~190
+v_min: 40           # la pelota en poca luz llega a V ~41 (p1)
+# Tamanos relativos a la altura de la imagen, para que valgan a 720p y a 480p.
+open_kernel_rel: 0.004     # ~3 px a 720p
+close_kernel_rel: 0.012    # ~9 px a 720p; cierra el brillo y el logotipo
+min_diameter_rel: 0.012    # 0,0167 corresponde a 3 m (12 px a 720p); margen por debajo
+max_diameter_rel: 0.14     # 0,10 corresponde a 0,5 m (72 px a 720p); margen por encima
+min_fill: 0.70             # area del contorno / area del circulo minimo (circulo ideal = 1)
+max_aspect: 1.5            # lado largo / lado corto de la caja
