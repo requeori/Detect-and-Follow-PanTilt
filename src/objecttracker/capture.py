@@ -1,16 +1,20 @@
 """Captura desde cámara según un perfil"""
 
 from __future__ import annotations
+
 import time
+
 import cv2
+
 from objecttracker.config import CameraProfile
 from objecttracker.types import Frame
 
-BACKENDS = {"msmf": cv2.CAP_MSMF, "dshow": cv2.CAP_DSHOW, "v4l2": cv2.CAP_V4L2,
-            "any": cv2.CAP_ANY}
+BACKENDS = {"msmf": cv2.CAP_MSMF, "dshow": cv2.CAP_DSHOW, "v4l2": cv2.CAP_V4L2, "any": cv2.CAP_ANY}
+
 
 class CaptureError(RuntimeError):
     """No se pudo abrir la cámara o el driver no entregó el modo pedido."""
+
 
 class CameraSource:
     """Lee fotogramas de una cámara con el modo de un perfil (backend, tamaño y fps).
@@ -30,8 +34,10 @@ class CameraSource:
         cap = cv2.VideoCapture(self._profile.device_index, BACKENDS[mode.backend])
         if not cap.isOpened():
             cap.release()
-            raise CaptureError(f"No se pudo abrir la cámara {self._profile.device_index} "
-                                f"con el backend {mode.backend}")
+            raise CaptureError(
+                f"No se pudo abrir la cámara {self._profile.device_index} "
+                f"con el backend {mode.backend}"
+            )
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, mode.width)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, mode.height)
         cap.set(cv2.CAP_PROP_FPS, mode.fps)
@@ -42,8 +48,9 @@ class CameraSource:
         height, width = image.shape[:2]
         if (width, height) != (mode.width, mode.height):
             cap.release()
-            raise CaptureError(f"El driver entrega {width}x{height} y el perfil pide "
-                                f"{mode.width}x{mode.height}")
+            raise CaptureError(
+                f"El driver entrega {width}x{height} y el perfil pide {mode.width}x{mode.height}"
+            )
         self._cap = cap
         self._index = 0
         return self

@@ -198,3 +198,4 @@ data/**/*.mp4
 data/**/*.png
 # se versionan los JSON y los resultados
 !data/**/*.json
+tests/*

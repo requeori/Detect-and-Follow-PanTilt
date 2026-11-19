@@ -1,15 +1,17 @@
 """Contrato entre detectores y evaluador"""
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
+
 import numpy as np
 
 
 @dataclass(frozen=True)
 class Detection:
     """Resultado de detectar la pelota en un fotograma.
-        Center y bbox están en píxeles de la imagen recibida."""
+    Center y bbox están en píxeles de la imagen recibida."""
 
     found: bool
     center: tuple[float, float] | None = None

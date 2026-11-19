@@ -6,18 +6,22 @@ import json
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
+
 import cv2
+
 from objecttracker.types import Frame
+
 
 class ClipError(RuntimeError):
     """El clip o su JSON no se pueden leer o son incoherentes."""
+
 
 @dataclass(frozen=True)
 class ClipMeta:
     clip_id: str
     scenario: str
     split: str
-    ball_present: str  # "always" o "never" 
+    ball_present: str  # "always" o "never"
     fps: float
     expected_frames: int
     video_path: Path
