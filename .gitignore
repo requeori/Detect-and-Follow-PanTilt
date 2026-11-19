@@ -182,3 +182,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+data/*
+experiments/*
+docs/*
+Python_Code_old/*
+
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+*.egg-info/
+# datos pesados: se quedan en local
+data/**/*.avi
+data/**/*.mp4
+data/**/*.png
+# se versionan los JSON y los resultados
+!data/**/*.json
